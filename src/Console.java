@@ -29,9 +29,19 @@ public class Console
         makeDirectoryBuffer();
     }
 
+    public static String join(ArrayList<String> r, String d)
+    {
+        if (r.size() == 0) return "";
+        StringBuilder sb = new StringBuilder();
+        int i;
+        for(i=0; i<r.size()-1; i++)
+            sb.append(r.get(i)+d);
+        return sb.toString()+r.get(i);
+    }
+
     protected void makeDirectoryBuffer()
     {
-        if (!currentDirectory.isEmpty()) bufferedDirectory = dirSep+String.join(dirSep, currentDirectory)+">";
+        if (!currentDirectory.isEmpty()) bufferedDirectory = dirSep + join(currentDirectory, dirSep)+">";
         else bufferedDirectory = dirSep+">";
     }
 
@@ -45,6 +55,7 @@ public class Console
 
     public int cd(String param)
     {
+        if (param.isEmpty()) return 0;
         if (param.equals(".."))
         {
             popDirectoryElement();

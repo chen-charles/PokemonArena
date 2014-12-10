@@ -242,9 +242,14 @@ public class PokemonArena
 		}
 		PokemonArenaConsole console = new PokemonArenaConsole();
 
-		console.next(); //return after finishing handling the input
-		console.getLastResult();    //int lastResult
+//		console.next(); //return after finishing handling the input
+//		console.getLastResult();    //int lastResult
 
+		console.setText("Nice");
+		while (console.next())
+		{
+			console.getLastResult();
+		}
 
 	}
 }
@@ -256,10 +261,9 @@ class PokemonArenaConsole extends Console
 		super();
 	}
 
-	protected void makeDirectoryBuffer()    //bufferedDirectory: the text that will display at the left side
+	public void setText(String s)
 	{
-		if (!currentDirectory.isEmpty()) bufferedDirectory = dirSep+String.join(dirSep, currentDirectory)+">";
-		else bufferedDirectory = dirSep+">";
+		bufferedDirectory = s+">";
 	}
 
 	protected int inputHandler(String cmd, String param)    //return true only if handled this cmd
@@ -268,16 +272,7 @@ class PokemonArenaConsole extends Console
 		if (result != CMD_NOT_HANDLED) return result;
 
 		result = CMD_RETURN_VOID;
-		if (cmd.equals("cd"))
-		{
-			result = cd(param);
-		} else if (cmd.equals("exit"))
-		{
-			result = exit(param);
-		} else
-		{
-			return CMD_NOT_HANDLED;  //not handled
-		}
+
 		return result;
 	}
 }
