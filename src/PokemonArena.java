@@ -240,6 +240,12 @@ public class PokemonArena
 		{
 			while (true) {selections[i] = stdin.nextInt(); if (selections[i] < pokemons.size()) break;}
 		}
+		PokemonArenaConsole console = new PokemonArenaConsole();
+
+		console.next(); //return after finishing handling the input
+		console.getLastResult();    //int lastResult
+
+
 	}
 }
 
@@ -256,23 +262,22 @@ class PokemonArenaConsole extends Console
 		else bufferedDirectory = dirSep+">";
 	}
 
-	protected boolean inputHandler(String cmd, String param)    //return true only if handled this cmd
+	protected int inputHandler(String cmd, String param)    //return true only if handled this cmd
 	{
+		int result = super.inputHandler(cmd, param);
+		if (result != CMD_NOT_HANDLED) return result;
+
+		result = CMD_RETURN_VOID;
 		if (cmd.equals("cd"))
 		{
-			cd(param);
-		}
-		else if(cmd.equals("exit"))
+			result = cd(param);
+		} else if (cmd.equals("exit"))
 		{
-			if (exit(param))
-			{
-				isTerminated = true;
-			}
-		}
-		else
+			result = exit(param);
+		} else
 		{
-			return false;
+			return CMD_NOT_HANDLED;  //not handled
 		}
-		return true;
+		return result;
 	}
 }

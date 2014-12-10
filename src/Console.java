@@ -1,3 +1,13 @@
+/*
+
+Console Internal Commands (CICs) are handled with the matching cmd name (not case sensitive)
+Overwrite the public methods of these cmd would change the behavior of CICs
+Simply adding an else-if clause will not solve the problem since CIC-handling starts from the base
+
+When a new CIC is defined, make sure all the CIC logic is located in a method with the name of the specific CIC
+
+ */
+
 import java.util.*;
 
 public class Console
@@ -33,7 +43,7 @@ public class Console
         }
     }
 
-    public boolean cd(String param)
+    public int cd(String param)
     {
         if (param.equals(".."))
         {
@@ -71,7 +81,7 @@ public class Console
             }
         }
         makeDirectoryBuffer();
-    	return true;
+    	return 0;
     }
 
     public static enum EXCEPTION
@@ -108,35 +118,68 @@ public class Console
         Exception(EXCEPTION.Exception);
     }
 
-    public boolean exit(String param)   //is exiting?
+    public int exit(String param)   //is exiting?
     {
-        return true;
+        isTerminated = true;
+        return 0;
     }
 
-    protected boolean inputHandler(String cmd, String param)    //return true only if handled this cmd
-{
-    if (cmd.equals("cd"))
+    private int lastResult = 0;
+    public int getLastResult()
     {
-        cd(param);
+        return lastResult;
     }
-    else if(cmd.equals("exit"))
+
+    public static final int CMD_RETURN_VOID = -1;
+    public static final int CMD_NOT_HANDLED = -2;
+    protected int inputHandler(String cmd, String param)
+    /*
+    This Method Should Be Overwritten.
+    This Method Should NOT Be Called Directly.  (Call inputHandler(String) instead)
+
+    return:
+        -1: handled cmd, cmd return type is VOID
+        -2: not handled cmd, could be handled in the overwritten methods
+        anythingelse: cmd-specific results
+    sample:
+    <CODE>
+        class ConsoleTest extends Console
     {
-        if (exit(param))
+        protected int inputHandler(String cmd, String param)
         {
-            isTerminated = true;
+            int result = super.inputHandler(cmd, param);
+            if (result != CMD_NOT_HANDLED) return result;
+
+            result = CMD_RETURN_VOID;
+            if (cmd.equals("cd"))
+            {
+                result = cd(param);
+            } else if (cmd.equals("exit"))
+            {
+                exit(param);
+            } else
+            {
+                return CMD_NOT_HANDLED;  //not handled
+            }
+            return result;
         }
     }
-    else
+    </CODE>
+     */
     {
-        return false;
+        return CMD_NOT_HANDLED;
     }
-    return true;
-}
+
+    private boolean _inputHandler(String cmd, String param)    //return true only if handled this cmd
+    {
+        lastResult = inputHandler(cmd, param);
+        return true;
+    }
 
     public boolean inputHandler(String userInput)
     {
         String[] arr = parseInput(userInput);
-        return inputHandler(arr[0], arr[1]);
+        return _inputHandler(arr[0], arr[1]);
     }
 
     protected String[] parseInput(String userInput)
@@ -150,7 +193,7 @@ public class Console
 
     public static void main(String[] args)
     {
-        Console cl = new Console();
+        ConsoleTest cl = new ConsoleTest();
         while (cl.next());
     }
 
@@ -160,9 +203,30 @@ public class Console
         {
             System.out.print(bufferedDirectory);
             inputHandler(stdin.nextLine());
-            return true;
+            return !isTerminated;
         }
         return false;
     }
 }
 
+class ConsoleTest extends Console
+{
+    protected int inputHandler(String cmd, String param)
+    {
+        int result = super.inputHandler(cmd, param);
+        if (result != CMD_NOT_HANDLED) return result;
+
+        result = CMD_RETURN_VOID;
+        if (cmd.equals("cd"))
+        {
+            result = cd(param);
+        } else if (cmd.equals("exit"))
+        {
+            exit(param);
+        } else
+        {
+            return CMD_NOT_HANDLED;  //not handled
+        }
+        return result;
+    }
+}
