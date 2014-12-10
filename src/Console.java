@@ -33,7 +33,7 @@ public class Console
     {
         if (r.size() == 0) return "";
         StringBuilder sb = new StringBuilder();
-        int i;
+        int i = 0;
         for(i=0; i<r.size()-1; i++)
             sb.append(r.get(i)+d);
         return sb.toString()+r.get(i);
@@ -85,7 +85,7 @@ public class Console
                 {
                     popDirectoryElement();
                 }
-                else
+                else if (!str.isEmpty())
                 {
                     currentDirectory.add(str);
                 }
@@ -198,7 +198,7 @@ public class Console
         String[] arr = userInput.split(" ");
         String[] result = new String[2];
         result[0] = arr[0].toLowerCase();
-        result[1] = userInput.substring(userInput.indexOf(" ")+1);
+        result[1] = userInput.substring(arr[0].length()).trim();
         return result;
     }
 
