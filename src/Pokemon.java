@@ -160,4 +160,15 @@ public class Pokemon
 		that.hp = Math.max(that.hp-damage, 0);
 		return true;
 	}
+	
+	public String toString()
+	{
+		String line = new String(new char[80]).replace("\0", "=");
+		return String.format(line+"\n"+"Name: %s \tType: %s \tResis.: %s \tWeakness: %s\n", name, type, resistance, weakness)
+			+ String.format("Hp: %d / %d \tEnergy: %d / %d\t", hp, maxhp, energy, 50)
+			+ (isStunned() ? String.format("STUNNED \t") : "")
+			+ (isDisabled() ? String.format("DISABLED \t") : "") + "\n"
+			+ ""
+			+ "\n" + line;
+	}
 }
