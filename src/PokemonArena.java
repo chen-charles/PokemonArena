@@ -32,11 +32,11 @@ public class PokemonArena
 		String[] data = raw.split(",");
 		int numAttacks = Integer.parseInt(data[5]);
 		Pokemon.AttackInfo[] attacks = new Pokemon.AttackInfo[numAttacks];
-		int j=0;
-		for (int i=0; i<numAttacks; i++)
+		int j = 0;
+		for (int i = 0; i < numAttacks; i++)
 		{
-			attacks[i] = new Pokemon.AttackInfo(data[6+j], Integer.parseInt(data[6+j+1]),
-					Integer.parseInt(data[6+j+2]), pkmonSpecialMap.get(data[6+j+3]));
+			attacks[i] = new Pokemon.AttackInfo(data[6 + j], Integer.parseInt(data[6 + j + 1]),
+					Integer.parseInt(data[6 + j + 2]), pkmonSpecialMap.get(data[6 + j + 3]));
 			j += 4;
 		}
 
@@ -52,8 +52,7 @@ public class PokemonArena
 		try
 		{
 			infile = new Scanner(new File(fname));
-		}
-		catch (IOException err)
+		} catch (IOException err)
 		{
 			System.out.println(err);
 			throw err;
@@ -77,11 +76,12 @@ public class PokemonArena
 	public static <T> ArrayList<T> toArrayList(T[] objectArray)
 	{
 		ArrayList<T> arr = new ArrayList<T>();
-		for (T i: objectArray) arr.add(i);
+		for (T i : objectArray) arr.add(i);
 		return arr;
 	}
 
 	public static Scanner stdin = new Scanner(System.in);
+
 	public static void main(String[] args)
 	{
 		init();
@@ -143,11 +143,10 @@ public class PokemonArena
 					if (i == -1) action = Battle.ACTION.PASS;
 					param = i + "";
 
-				}
-				else
+				} else
 				{
-					System.out.println("States ATK: "+atk.getCurrentPokemon().name() + " "+atk.getCurrentPokemon().hp());
-					System.out.println("States DEF: "+def.getCurrentPokemon().name() + " "+def.getCurrentPokemon().hp());
+					System.out.println("States ATK: " + atk.getCurrentPokemon().name() + " " + atk.getCurrentPokemon().hp());
+					System.out.println("States DEF: " + def.getCurrentPokemon().name() + " " + def.getCurrentPokemon().hp());
 					String[] strs = ask(atk, ASK.NEXTACTION).split(" ");
 					if (strs[0].equals("ATTACK")) action = Battle.ACTION.ATTACK;
 					else if (strs[0].equals("RETREAT")) action = Battle.ACTION.RETREAT;
@@ -191,15 +190,15 @@ public class PokemonArena
 
 	public static String ask(Player player, ASK type)
 	{
-		switch(type)
+		switch (type)
 		{
 		case NEXTPOKEMON:
 			int[] selection = {0};
 			pickpokemons(player.pokemons, selection);
-			return selection[0]+"";
+			return selection[0] + "";
 		case NEXTACTION:
 
-		return nextaction(player);
+			return nextaction(player);
 		default:
 			return "";
 		}
@@ -214,9 +213,9 @@ public class PokemonArena
 			{
 			case 1:
 				ArrayList<Integer> arr = player.getCurrentPokemon().affordables();
-				for (int i: arr)
+				for (int i : arr)
 				{
-					System.out.println(i+". "+player.getCurrentPokemon().attacks()[i].name());
+					System.out.println(i + ". " + player.getCurrentPokemon().attacks()[i].name());
 				}
 				return "ATTACK " + stdin.nextInt();
 			case 2:
@@ -232,47 +231,17 @@ public class PokemonArena
 
 	public static void pickpokemons(ArrayList<Pokemon> pokemons, int[] selections)
 	{
-		for (int i=0; i<pokemons.size(); i++)
+		for (int i = 0; i < pokemons.size(); i++)
 		{
-			System.out.println(i+". "+pokemons.get(i).name());
+			System.out.println(i + ". " + pokemons.get(i).name());
 		}
-		for (int i=0; i<selections.length; i++)
+		for (int i = 0; i < selections.length; i++)
 		{
-			while (true) {selections[i] = stdin.nextInt(); if (selections[i] < pokemons.size()) break;}
+			while (true)
+			{
+				selections[i] = stdin.nextInt();
+				if (selections[i] < pokemons.size()) break;
+			}
 		}
-		PokemonArenaConsole console = new PokemonArenaConsole();
-
-//		console.next(); //return after finishing handling the input
-//		console.getLastResult();    //int lastResult
-
-		console.setText("Nice");
-		while (console.next())
-		{
-			console.getLastResult();
-		}
-
-	}
-}
-
-class PokemonArenaConsole extends Console
-{
-	public PokemonArenaConsole()
-	{
-		super();
-	}
-
-	public void setText(String s)
-	{
-		bufferedDirectory = s+">";
-	}
-
-	protected int inputHandler(String cmd, String param)    //return true only if handled this cmd
-	{
-		int result = super.inputHandler(cmd, param);
-		if (result != CMD_NOT_HANDLED) return result;
-
-		result = CMD_RETURN_VOID;
-
-		return result;
 	}
 }
