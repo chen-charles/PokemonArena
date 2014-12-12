@@ -90,7 +90,11 @@ public class Pokemon
 		public int cost(){return this.cost;}
 		public int damage(){return this.damage;}
 		public SPECIAL special(){return this.special;}
-
+		
+		public String toString()
+		{
+			return name + "\tEnergy Cost: " + cost + "\tDamage: " + damage + "\tSpecial: " + special;
+		}
 	}
 
 	public Pokemon(String name, int hp, Pokemon.TYPE type, Pokemon.TYPE resistance, Pokemon.TYPE weakness, int numAttacks,
@@ -164,11 +168,17 @@ public class Pokemon
 	public String toString()
 	{
 		String line = new String(new char[80]).replace("\0", "=");
+		StringBuilder sb = new StringBuilder();
+		for (AttackInfo info: this.attacks)
+		{
+			sb.append("\t"+info.toString()+"\n");
+		}
+		
 		return String.format(line+"\n"+"Name: %s \tType: %s \tResis.: %s \tWeakness: %s\n", name, type, resistance, weakness)
 			+ String.format("Hp: %d / %d \tEnergy: %d / %d\t", hp, maxhp, energy, 50)
 			+ (isStunned() ? String.format("STUNNED \t") : "")
 			+ (isDisabled() ? String.format("DISABLED \t") : "") + "\n"
-			+ ""
-			+ "\n" + line;
+			+ "Attack Info: \n"
+			+ sb.toString() + line;
 	}
 }
