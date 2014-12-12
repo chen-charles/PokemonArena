@@ -208,22 +208,36 @@ public class PokemonArena
 	{
 		while (true)
 		{
-			System.out.println("1. ATTACK \n2. RETREAT \n3. PASS?");
-			switch (stdin.nextInt())
+			
+			ArrayList<Integer> arr = player.getCurrentPokemon().affordables();
+			int t;
+			if (arr.isEmpty())
+			{
+				System.out.println("1. RETREAT \n2. PASS");
+				t = stdin.nextInt(); stdin.nextLine(); 
+				t ++ ;
+			}
+			else
+			{
+				System.out.println("1. ATTACK \n2. RETREAT \n3. PASS");
+				t = stdin.nextInt(); stdin.nextLine(); 
+			}
+			
+			switch (t)
 			{
 			case 1:
-				ArrayList<Integer> arr = player.getCurrentPokemon().affordables();
-				for (int i : arr)
+				for (int i: arr)
 				{
-					System.out.println(i + ". " + player.getCurrentPokemon().attacks()[i].name());
+					System.out.println(i+". "+player.getCurrentPokemon().attacks()[i].toString());
 				}
-				return "ATTACK " + stdin.nextInt();
+				t = stdin.nextInt(); stdin.nextLine(); 
+				return "ATTACK " + t;
 			case 2:
 				return "RETREAT " + ask(player, ASK.NEXTPOKEMON);
 			case 3:
 				return "PASS 0";
 			default:
-
+				return nextaction(player);
 			}
 		}
 
@@ -240,6 +254,7 @@ public class PokemonArena
 			while (true)
 			{
 				selections[i] = stdin.nextInt();
+				stdin.nextLine();
 				if (selections[i] < pokemons.size()) break;
 			}
 		}
