@@ -231,13 +231,14 @@ public class PokemonArena
 					System.out.println(i+". "+player.getCurrentPokemon().attacks()[i].toString());
 				}
 				t = stdin.nextInt(); stdin.nextLine(); 
+				if (t >= arr.size()) continue;
 				return "ATTACK " + t;
 			case 2:
 				return "RETREAT " + ask(player, ASK.NEXTPOKEMON);
 			case 3:
 				return "PASS 0";
 			default:
-				return nextaction(player);
+				
 			}
 		}
 
