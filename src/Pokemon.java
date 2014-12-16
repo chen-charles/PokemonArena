@@ -136,7 +136,7 @@ public class Pokemon
 		int damage = attacks[atkindx].damage();
 		if (that.weakness() == this.type()) damage *= 2;
 		if (that.resistance() == this.type()) damage /= 2;
-		if (this.isDisabled()) damage = Math.min(damage-10, 0);
+		if (this.isDisabled()) damage = Math.max(damage-10, 0);
 
 		switch(attacks[atkindx].special())
 		{
@@ -176,11 +176,16 @@ public class Pokemon
 			sb.append("\t"+info.toString()+"\n");
 		}
 		
+		return this.toStatusString()
+			+ "Attack Info: \n"
+			+ sb.toString();
+	}
+	
+	public String toStatusString()
+	{
 		return String.format("Name: %s \tType: %s \tResis.: %s \tWeakness: %s\n", name, type, resistance, weakness)
 			+ String.format("Hp: %d / %d \tEnergy: %d / %d\t", hp, maxhp, energy, 50)
 			+ (isStunned() ? String.format("STUNNED \t") : "")
-			+ (isDisabled() ? String.format("DISABLED \t") : "") + "\n"
-			+ "Attack Info: \n"
-			+ sb.toString();
+			+ (isDisabled() ? String.format("DISABLED \t") : "") + "\n";
 	}
 }
