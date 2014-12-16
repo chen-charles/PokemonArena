@@ -146,8 +146,8 @@ public class PokemonArena
 
 				} else
 				{
-					System.out.println("Your State: " + atk.getCurrentPokemon().name() + " " + atk.getCurrentPokemon().hp());
-					System.out.println("Enemy's State: " + def.getCurrentPokemon().name() + " " + def.getCurrentPokemon().hp());
+					System.out.println("Your Pokemon's State:\n"+atk.getCurrentPokemon().toStatusString());
+					System.out.println("Enemy's Pokemons's State:\n" + def.getCurrentPokemon().toStatusString());
 					String[] strs = ask(atk, ASK.NEXTACTION).split(" ");
 					if (strs[0].equals("ATTACK")) action = Battle.ACTION.ATTACK;
 					else if (strs[0].equals("RETREAT")) action = Battle.ACTION.RETREAT;
