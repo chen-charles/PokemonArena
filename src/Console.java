@@ -105,18 +105,19 @@ public class Console
         switch(expType)
         {
         case Exception:
-            System.out.println("Exception Called");
+            System.out.println("Exception");
             break;
         case Error:
-            System.out.println("Error Called");
+            System.out.println("Error");
             break;
         case InvalidParameterException:
-            System.out.println("InvalidParameterException Called");
+            System.out.println("InvalidParameterException");
             break;
         case InvalidCommandException:
-            System.out.println("InvalidCommandException Called");
+            System.out.println("InvalidCommandException");
             break;
         }
+        System.out.println(expInfo);
     }
 
     public void Exception(EXCEPTION exptype)
@@ -131,6 +132,11 @@ public class Console
 
     public int exit(String param)   //is exiting?
     {
+        return exit();
+    }
+
+    public int exit()
+    {
         isTerminated = true;
         return 0;
     }
@@ -141,6 +147,7 @@ public class Console
         return lastResult;
     }
 
+    public static final int CMD_SUCCESS = 0;
     public static final int CMD_RETURN_VOID = -1;
     public static final int CMD_NOT_HANDLED = -2;
     protected int inputHandler(String cmd, String param)

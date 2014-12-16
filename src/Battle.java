@@ -67,7 +67,7 @@ public class Battle
 
 		//perform action(s)
 		if (action == ACTION.ATTACK)  playerA.attack(playerB, Integer.parseInt(param));
-		else if (action == ACTION.RETREAT) playerA.setCurrentPokemon(param);
+		else if (action == ACTION.RETREAT) playerA.setCurrentPokemon(Integer.parseInt(param));
 		else{}
 
 		Pokemon currentPokemonA = playerA.getCurrentPokemon();

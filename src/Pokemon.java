@@ -97,6 +97,9 @@ public class Pokemon
 		}
 	}
 
+	public static int idcount = 0;
+	protected int ID = idcount++;
+	public int ID(){return ID;}
 	public Pokemon(String name, int hp, Pokemon.TYPE type, Pokemon.TYPE resistance, Pokemon.TYPE weakness, int numAttacks,
 	               Pokemon.AttackInfo[] attacks)
 	{
@@ -167,18 +170,17 @@ public class Pokemon
 	
 	public String toString()
 	{
-		String line = new String(new char[80]).replace("\0", "=");
 		StringBuilder sb = new StringBuilder();
 		for (AttackInfo info: this.attacks)
 		{
 			sb.append("\t"+info.toString()+"\n");
 		}
 		
-		return String.format(line+"\n"+"Name: %s \tType: %s \tResis.: %s \tWeakness: %s\n", name, type, resistance, weakness)
+		return String.format("Name: %s \tType: %s \tResis.: %s \tWeakness: %s\n", name, type, resistance, weakness)
 			+ String.format("Hp: %d / %d \tEnergy: %d / %d\t", hp, maxhp, energy, 50)
 			+ (isStunned() ? String.format("STUNNED \t") : "")
 			+ (isDisabled() ? String.format("DISABLED \t") : "") + "\n"
 			+ "Attack Info: \n"
-			+ sb.toString() + line;
+			+ sb.toString();
 	}
 }
