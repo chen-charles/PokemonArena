@@ -25,6 +25,7 @@ public class PokemonArena
 		pkmonTypeMap.put("grass", Pokemon.TYPE.GRASS);
 		pkmonTypeMap.put("fighting", Pokemon.TYPE.FIGHTING);
 		pkmonTypeMap.put("water", Pokemon.TYPE.WATER);
+		pkmonTypeMap.put("leaf", Pokemon.TYPE.LEAF);
 	}
 
 	public static Pokemon parseRaw(String raw) //parse the RAW data, then call the constructor
@@ -177,6 +178,7 @@ public class PokemonArena
 					System.out.printf("The current pokemon %s is dead(HP = 0).  Please pick the next one! \n",
 							atk.getCurrentPokemon().name());
 					atk.remove();
+
 					atk.setCurrentPokemon(Integer.parseInt(ask(atk, ASK.NEXTPOKEMON)));
 
 				}
@@ -190,7 +192,15 @@ public class PokemonArena
 
 			if (!atk.isAlive()) //user's dead
 			{
+				System.out.println("You Losted.  GAME OVER.  ");
 				break;
+			}
+			else
+			{
+				if (pokemons.size() != 0)
+					System.out.printf("You Won This Battle!  %d enemy(enemies) Left! \n ", pokemons.size());
+				else
+					System.out.println("You Have Beaten All the other Pokemons!  Game Over!  ");
 			}
 
 
@@ -208,6 +218,7 @@ public class PokemonArena
 		switch (type)
 		{
 		case NEXTPOKEMON:
+			System.out.println("Pick Your Next Pokemon!  Type in 'HELP' for more information.  ");
 			return "" + pickpokemons(player.pokemons);
 		case NEXTACTION:
 
@@ -264,6 +275,7 @@ public class PokemonArena
 		HashSet<Integer> set = new HashSet<Integer>();
 		Pokemon[] arr = new Pokemon[5];
 		int t = 0;
+		System.out.println("Pick Your Pokemons!  Type in 'HELP' for more information.  ");
 		while (set.size() != selections.length)
 		{
 			System.out.println((set.size()-selections.length) + " spots left! ");

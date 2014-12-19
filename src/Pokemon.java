@@ -63,7 +63,7 @@ public class Pokemon
 
 	public enum TYPE
 	{
-		EARTH, FIRE, GRASS, WATER, FIGHTING, ELECTRIC
+		EARTH, FIRE, GRASS, WATER, FIGHTING, ELECTRIC, LEAF
 	}
 	
 	public enum SPECIAL
