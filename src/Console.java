@@ -105,16 +105,16 @@ public class Console
         switch(expType)
         {
         case Exception:
-            System.out.println("Exception");
+            System.out.print("Exception: ");
             break;
         case Error:
-            System.out.println("Error");
+            System.out.print("Error: ");
             break;
         case InvalidParameterException:
-            System.out.println("InvalidParameterException");
+            System.out.print("InvalidParameterException: ");
             break;
         case InvalidCommandException:
-            System.out.println("InvalidCommandException");
+            System.out.print("InvalidCommandException: ");
             break;
         }
         System.out.println(expInfo);

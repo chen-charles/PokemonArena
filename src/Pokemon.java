@@ -4,6 +4,7 @@ public class Pokemon
 {
 	private String name;
 	public String name(){return this.name;}
+	public void rename(String name){this.name = name;}
 
 	private int hp;
 	private int maxhp;
@@ -63,7 +64,7 @@ public class Pokemon
 
 	public enum TYPE
 	{
-		EARTH, FIRE, GRASS, WATER, FIGHTING, ELECTRIC, LEAF
+		EARTH, FIRE, GRASS, WATER, FIGHTING, ELECTRIC, LEAF, NONE
 	}
 	
 	public enum SPECIAL
@@ -93,7 +94,7 @@ public class Pokemon
 		
 		public String toString()
 		{
-			return name + "\tEnergy Cost: " + cost + "\tDamage: " + damage + "\tSpecial: " + special;
+			return name + "\n\t\tEnergy Cost: " + cost + "\tDamage: " + damage + "\tSpecial: " + special;
 		}
 	}
 

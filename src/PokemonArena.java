@@ -19,6 +19,7 @@ public class PokemonArena
 		pkmonSpecialMap.put("wild card", Pokemon.SPECIAL.WILDCARD);
 		pkmonSpecialMap.put("stun", Pokemon.SPECIAL.STUN);
 
+		pkmonTypeMap.put(" ", Pokemon.TYPE.NONE);
 		pkmonTypeMap.put("electric", Pokemon.TYPE.ELECTRIC);
 		pkmonTypeMap.put("earth", Pokemon.TYPE.EARTH);
 		pkmonTypeMap.put("fire", Pokemon.TYPE.FIRE);
@@ -273,7 +274,7 @@ public class PokemonArena
 	public static void pickpokemons(ArrayList<Pokemon> pokemons, int[] selections)
 	{
 		HashSet<Integer> set = new HashSet<Integer>();
-		Pokemon[] arr = new Pokemon[5];
+		Pokemon[] arr = new Pokemon[selections.length];
 		int t = 0;
 		System.out.println("Pick Your Pokemons!  Type in 'HELP' for more information.  ");
 		while (set.size() != selections.length)
@@ -351,10 +352,19 @@ class PickPokemonConsole extends Console
 	{
 		try
 		{
+			int j=0;
 			for (int i=0; i<pokemons.size(); i++)
 			{
-				System.out.println(i+". "+pokemons.get(i).name());
+				if (++j%4 == 0) System.out.println(i+". "+pokemons.get(i).name());
+				else
+				{
+					String s = i+". "+pokemons.get(i).name();
+
+					//80 columns
+					System.out.print(s + new String(new char[(80 / 4) - s.length()]).replace("\0", " "));
+				}
 			}
+			if (j%4 != 0) System.out.println();
 		}
 		catch (NullPointerException err)
 		{
