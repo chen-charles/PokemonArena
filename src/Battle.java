@@ -1,8 +1,12 @@
+/*
+Battle.java
+Charles-Jianye Chen
 
+the layer tbat handles most of the battle-ing logics
 
-/**
- *
  */
+
+import java.util.*;
 
 public class Battle
 {
@@ -10,7 +14,11 @@ public class Battle
 	private boolean isInitialized = false;
 	public static final boolean ATTACKER = true;
 	public static final boolean DEFENSER = false;
-	private boolean nextRound = ATTACKER;
+	public boolean nextRound =  randomBoolean();   //randomly select the starter
+	public boolean randomBoolean()
+	{
+		return new Random().nextInt(1) == 0;
+	}
 
 	private boolean winner = ATTACKER;
 	public boolean winner()

@@ -2,8 +2,9 @@
 
 Console Internal Commands (CICs) are handled with the matching cmd name (not case sensitive)
 Overwrite the public methods of these cmd would change the behavior of CICs
-Simply adding an else-if clause will not solve the problem since CIC-handling starts from the base
+Simply adding an else-if clause will not solve the problem since CIC-handling starts from the base class
 
+OPTIONAL
 When a new CIC is defined, make sure all the CIC logic is located in a method with the name of the specific CIC
 
  */
@@ -132,13 +133,21 @@ public class Console
 
     public int exit(String param)   //is exiting?
     {
+        exitStatus = param;
         return exit();
     }
 
     public int exit()
     {
+        if (exitStatus == null) exitStatus = "";
         isTerminated = true;
         return 0;
+    }
+
+    private String exitStatus = null;
+    public String getExitStatus()
+    {
+        return exitStatus;
     }
 
     private int lastResult = 0;
@@ -209,7 +218,7 @@ public class Console
         return result;
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args)  //sample main
     {
         ConsoleTest cl = new ConsoleTest();
         while (cl.next());

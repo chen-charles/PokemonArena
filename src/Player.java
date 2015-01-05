@@ -1,3 +1,10 @@
+/*
+Player.java
+Charles-Jianye Chen
+
+the layer between Pokemon to other classes
+
+ */
 
 import java.util.*;
 

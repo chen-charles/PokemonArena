@@ -1,3 +1,11 @@
+/*
+PokemonArena.java
+Charles-Jianye Chen
+
+ICS4U project: PokemonArena
+design a pokemon game with only battle-ing stuff
+
+ */
 
 import java.io.*;
 import java.util.*;
@@ -37,11 +45,14 @@ public class PokemonArena
 		int j = 0;
 		for (int i = 0; i < numAttacks; i++)
 		{
+			//public AttackInfo(String name, int cost, int damage, SPECIAL special);
 			attacks[i] = new Pokemon.AttackInfo(data[6 + j], Integer.parseInt(data[6 + j + 1]),
 					Integer.parseInt(data[6 + j + 2]), pkmonSpecialMap.get(data[6 + j + 3]));
 			j += 4;
 		}
 
+		//	public Pokemon(String name, int hp, Pokemon.TYPE type, Pokemon.TYPE resistance, Pokemon.TYPE weakness, int numAttacks,
+		//Pokemon.AttackInfo[] attacks);
 		return new
 				Pokemon(data[0], Integer.parseInt(data[1]), pkmonTypeMap.get(data[2]), pkmonTypeMap.get(data[3]),
 				pkmonTypeMap.get(data[4]),
@@ -51,14 +62,8 @@ public class PokemonArena
 	public static Pokemon[] loadPokemons(String fname) throws IOException
 	{
 		Scanner infile;
-		try
-		{
-			infile = new Scanner(new File(fname));
-		} catch (IOException err)
-		{
-			System.out.println(err);
-			throw err;
-		}
+		infile = new Scanner(new File(fname));  //throws IOException
+
 		int numPokemons;
 
 		numPokemons = Integer.parseInt(infile.nextLine());
@@ -86,8 +91,9 @@ public class PokemonArena
 
 	public static void main(String[] args)
 	{
-		init();
+		init();     //setup fields
 
+		//parse the data file and transfer into a list of pokemon instances
 		ArrayList<Pokemon> pokemons;
 		try
 		{
@@ -95,8 +101,12 @@ public class PokemonArena
 			pokemons = toArrayList(tmp);
 		} catch (IOException err)
 		{
+			System.out.println(err.toString());
 			return;
 		}
+
+		System.out.println("Welcome to Pokemon Arena BEAT THEM ALL.  ");
+		System.out.println("Defeat ALL your enemies to become the Trainer Supreme!  ");
 
 		//picking
 		Player user = new Player();
@@ -117,20 +127,25 @@ public class PokemonArena
 		//enter battle
 		while (!pokemons.isEmpty())
 		{
+			//pop a pokemon from the list of unused
 			Player enemy = new Player();
 			int indx = new Random().nextInt(pokemons.size());
-
 			enemy.pokemons.add(pokemons.get(indx));
 			pokemons.remove(indx);
 
-			//new battle
+
+			//new battle, setup
 			Player atk = user;
 			Player def = enemy;
-			boolean isComputerTurn = false;
+
 			Battle battle = new Battle(atk, def);
 
-			battle.init(); //init battle states before making decisions
+			//Battle auto. init. a random starter
+			//true->atk, false->def
+			//since user is always atk, the val should be the same
+			boolean isUserTurn = battle.nextRound;
 
+			battle.init(); //init battle states before making decisions
 
 			while (true)
 			{
@@ -138,37 +153,41 @@ public class PokemonArena
 				String param;
 				Battle.nextRoundr result;
 				int prevHP;
-				if (isComputerTurn)
-				{
-					action = Battle.ACTION.ATTACK;
-					int i = def.getCurrentPokemon().randAtkindx();
-					if (i == -1) action = Battle.ACTION.PASS;
-					param = i + "";
-					prevHP = atk.getCurrentPokemon().hp();
 
-				} else
+				if (isUserTurn)
 				{
+					System.out.println("It is Your Turn NOW.  ");
 					System.out.println("Your Pokemon's State:\n"+atk.getCurrentPokemon().toStatusString());
 					System.out.println("Enemy's Pokemons's State:\n" + def.getCurrentPokemon().toStatusString());
-					String[] strs = ask(atk, ASK.NEXTACTION).split(" ");
+
+					String[] strs = nextaction(atk).split(" "); //{ACTION, PARAM}
 					if (strs[0].equals("ATTACK")) action = Battle.ACTION.ATTACK;
 					else if (strs[0].equals("RETREAT")) action = Battle.ACTION.RETREAT;
 					else action = Battle.ACTION.PASS;
 					param = strs[1];
 					prevHP = def.getCurrentPokemon().hp();
 				}
+				else
+				{
+					//decide computer's action
+					action = Battle.ACTION.ATTACK;
+					int i = def.getCurrentPokemon().randAtkindx();
+					if (i == -1) action = Battle.ACTION.PASS;   //none of the attacks avail.
+					param = i + "";
+					prevHP = atk.getCurrentPokemon().hp();
+				}
 
 
 				result = battle.nextRound(action, param);
-				if (isComputerTurn)
-				{
-					System.out.printf("%s's Turn: \t\tDamage Dealt: %d\n",
-							def.getCurrentPokemon().name(), (prevHP - atk.getCurrentPokemon().hp()));
-
-				} else
+				if (isUserTurn)
 				{
 					System.out.printf("%s's Turn: \t\tDamage Dealt: %d\n",
 							atk.getCurrentPokemon().name(), (prevHP - def.getCurrentPokemon().hp()));
+				}
+				else
+				{
+					System.out.printf("%s's Turn: \t\tDamage Dealt: %d\n",
+							def.getCurrentPokemon().name(), (prevHP - atk.getCurrentPokemon().hp()));
 				}
 
 				//since only one pokemon for enemy, this wont matter, only the user will be asked for next pokemon
@@ -178,18 +197,19 @@ public class PokemonArena
 				{
 					System.out.printf("The current pokemon %s is dead(HP = 0).  Please pick the next one! \n",
 							atk.getCurrentPokemon().name());
-					atk.remove();
+					atk.remove();   //remove the current pokemon
 
-					atk.setCurrentPokemon(Integer.parseInt(ask(atk, ASK.NEXTPOKEMON)));
+					atk.setCurrentPokemon(Integer.parseInt(nextpokemon(atk)));
 
+					//re-gener. random starter
+					battle.nextRound = battle.randomBoolean();
 				}
 
 
 
-				isComputerTurn = !isComputerTurn;
+				isUserTurn = battle.nextRound;
 			}
-//			System.out.println(battle.winner());
-			//battle.end() will be called before program reaches here
+			//battle.end() will be called by Battle
 
 			if (!atk.isAlive()) //user's dead
 			{
@@ -199,9 +219,9 @@ public class PokemonArena
 			else
 			{
 				if (pokemons.size() != 0)
-					System.out.printf("You Won This Battle!  %d enemy(enemies) Left! \n ", pokemons.size());
+					System.out.printf("WON!  %d enemy(enemies) left! \n", pokemons.size());
 				else
-					System.out.println("You Have Beaten All the other Pokemons!  Game Over!  ");
+					System.out.println("Excellent Job!  Mr. Trainer Supreme!  ");
 			}
 
 
@@ -209,24 +229,11 @@ public class PokemonArena
 
 	}
 
-	public enum ASK
+	public static String nextpokemon(Player player) //this method ensures the selection is being done(see pickpokemons)
 	{
-		NEXTPOKEMON, NEXTACTION
-	}
-
-	public static String ask(Player player, ASK type)
-	{
-		switch (type)
-		{
-		case NEXTPOKEMON:
-			System.out.println("Pick Your Next Pokemon!  Type in 'HELP' for more information.  ");
-			return "" + pickpokemons(player.pokemons);
-		case NEXTACTION:
-
-			return nextaction(player);
-		default:
-			return "";
-		}
+		int[] sel = {0};
+		pickpokemons(player.pokemons, sel);
+		return "" + sel[0];
 	}
 
 	public static String nextaction(Player player)
@@ -234,13 +241,13 @@ public class PokemonArena
 		while (true)
 		{
 			
-			ArrayList<Integer> arr = player.getCurrentPokemon().affordables();
+			ArrayList<Integer> aff = player.getCurrentPokemon().affordables();
 			int t;
-			if (arr.isEmpty())
+			if (aff.isEmpty())
 			{
 				System.out.println("1. RETREAT \n2. PASS");
 				t = stdin.nextInt(); stdin.nextLine(); 
-				t ++ ;
+				t ++ ;      //please compare to the "else" clause
 			}
 			else
 			{
@@ -251,17 +258,28 @@ public class PokemonArena
 			switch (t)
 			{
 			case 1:
-				for (int i: arr)
+				for (int i: aff)
 				{
 					System.out.println(i+". "+player.getCurrentPokemon().attacks()[i].toString());
 				}
 				t = stdin.nextInt(); stdin.nextLine(); 
-				if (t >= arr.size()) continue;
+				if (t >= aff.size()) continue;  //failed, ask again
 				return "ATTACK " + t;
 			case 2:
-				String tmp = ask(player, ASK.NEXTPOKEMON);
-				System.out.println(player.pokemons.get(Integer.parseInt(tmp)).name() + " Selected!");
-				return "RETREAT " + tmp;
+				System.out.println("Retreat!  Selected your next pokemon!  ");
+				int sel;
+				try
+				{
+					sel = pickpokemons(player.pokemons);
+				}
+				catch(Exception err)
+				{
+					if (err.getMessage().equals("retn")) continue; //ask user again
+					else throw new IllegalStateException(err.getMessage());
+				}
+
+				System.out.println(player.pokemons.get(sel).name() + " Selected!");
+				return "RETREAT " + sel;
 			case 3:
 				return "PASS 0";
 			default:
@@ -272,18 +290,38 @@ public class PokemonArena
 	}
 
 	public static void pickpokemons(ArrayList<Pokemon> pokemons, int[] selections)
+	//***this method does not allow "retn" to happen
 	{
 		HashSet<Integer> set = new HashSet<Integer>();
-		Pokemon[] arr = new Pokemon[selections.length];
+		Pokemon[] sel = new Pokemon[selections.length];
 		int t = 0;
 		System.out.println("Pick Your Pokemons!  Type in 'HELP' for more information.  ");
+
 		while (set.size() != selections.length)
 		{
 			System.out.println((set.size()-selections.length) + " spots left! ");
-			arr[t] = pokemons.get(pickpokemons(pokemons));
-			if (set.add(arr[t].ID())) t++;
+			while (true)    //ensures "retn" does not happen
+			{
+				try
+				{
+					sel[t] = pokemons.get(pickpokemons(pokemons));
+					break;
+				} catch (Exception err)
+				{
+					if (err.getMessage().equals("retn"))
+					{
+						System.out.println("RETN is NOT allowed in this session!  ");
+					} else
+					{
+						throw new IllegalStateException(err.getMessage());  //unexpected
+					}
+				}
+			}
+			if (set.add(sel[t].ID())) t++;      //set.add: return true if not in it yet
 			else System.out.println("Already Picked!");
 		}
+
+		//figure out the right indx for the selection
 		t = 0;
 		for (int i=0; i<pokemons.size(); i++)
 		{
@@ -294,11 +332,15 @@ public class PokemonArena
 		}
 	}
 
-	public static int pickpokemons(ArrayList<Pokemon> pokemons)
+	public static int pickpokemons(ArrayList<Pokemon> pokemons) throws Exception
+	//Unless the action is successfully done, an Exception will occur
+	//***RETN is not acceptable in this method
 	{
 		PickPokemonConsole console = new PickPokemonConsole();
 		console.setPokemons(pokemons);
 		while (console.next());
+		if (console.getExitStatus() == null || !console.getExitStatus().equals(""))
+			throw new Exception(console.getExitStatus());   //invalid exit status, SHOULD BE CAUGHT
 		return console.getLastResult();
 	}
 }
@@ -330,6 +372,9 @@ class PickPokemonConsole extends Console
 		} else if (cmd.equals("pick"))
 		{
 			result = pick(param);
+		} else if (cmd.equals("retn"))
+		{
+			result = exit(cmd);
 		} else
 		{
 			Exception(EXCEPTION.InvalidCommandException);
@@ -345,6 +390,7 @@ class PickPokemonConsole extends Console
 		System.out.println("INFO\t\tID/name show information about a specified pokemon");
 		System.out.println("LIST\t\tshow a list of available pokemons");
 		System.out.println("PICK\t\tID/name pick a specified pokemon");
+		System.out.println("RETN\t\tcancel the operation is possible");
 		return CMD_RETURN_VOID;
 	}
 
@@ -358,10 +404,7 @@ class PickPokemonConsole extends Console
 				if (++j%4 == 0) System.out.println(i+". "+pokemons.get(i).name());
 				else
 				{
-					String s = i+". "+pokemons.get(i).name();
-
-					//80 columns
-					System.out.print(s + new String(new char[(80 / 4) - s.length()]).replace("\0", " "));
+					System.out.printf("%20s", i+". "+pokemons.get(i).name());   //80 columns
 				}
 			}
 			if (j%4 != 0) System.out.println();

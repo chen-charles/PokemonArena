@@ -1,5 +1,4 @@
-29
-yousuck,10,water,water,water,2,Dragon Rage,30,50, ,Bubblebeam,40,40,disable
+28
 Gyarados,100,water,leaf,earth,2,Dragon Rage,30,50, ,Bubblebeam,40,40,disable
 Voltorb,40,electric, ,earth,2,Spark,10,20, ,Explode,40,40,wild storm
 Mankey,40,earth, ,fighting,2,Fury Swipes,20,60,wild card,Pranks,0,0,recharge

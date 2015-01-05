@@ -1,3 +1,13 @@
+/*
+Pokemon.java
+Charles-Jianye Chen
+
+not a lot of comments is added here
+
+the code really explains itself
+
+ */
+
 import java.util.*;
 
 public class Pokemon
