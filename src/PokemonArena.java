@@ -144,7 +144,6 @@ public class PokemonArena
 			//since user is always atk, the val should be the same
 			boolean isUserTurn = battle.nextRound;
 
-			battle.init(); //init battle states before making decisions
 
 			while (true)
 			{
