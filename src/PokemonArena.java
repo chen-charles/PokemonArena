@@ -51,12 +51,11 @@ public class PokemonArena
 			j += 4;
 		}
 
-		//	public Pokemon(String name, int hp, Pokemon.TYPE type, Pokemon.TYPE resistance, Pokemon.TYPE weakness, int numAttacks,
+		//	public Pokemon(String name, int hp, Pokemon.TYPE type, Pokemon.TYPE resistance, Pokemon.TYPE weakness,
 		//Pokemon.AttackInfo[] attacks);
 		return new
 				Pokemon(data[0], Integer.parseInt(data[1]), pkmonTypeMap.get(data[2]), pkmonTypeMap.get(data[3]),
-				pkmonTypeMap.get(data[4]),
-				numAttacks, attacks);
+				pkmonTypeMap.get(data[4]), attacks);
 	}
 
 	public static Pokemon[] loadPokemons(String fname) throws IOException

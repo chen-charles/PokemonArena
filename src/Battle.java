@@ -1,12 +1,13 @@
-/*
-Battle.java
-Charles-Jianye Chen
-
-the layer tbat handles most of the battle-ing logics
-
- */
-
 import java.util.*;
+
+/**
+ * Battle.java
+ *
+ * This class handles all the battle related logics that is needed in PokemonArena game.
+ * This class is designed in the logic of start->running->end.
+ *
+ * @author Charles-Jianye Chen
+ */
 
 public class Battle
 {
