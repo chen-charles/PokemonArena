@@ -13,15 +13,43 @@ public class Battle
 {
 	private boolean isDone = false;
 	private boolean isInitialized = false;
+	private int countActions = 0;
+	
+	/**
+	 * If nextRound holds this value, the attacker(first param during construction) would go for the nextRound.  
+	 *
+	 * @see	Battle#nextRound
+	 */
 	public static final boolean ATTACKER = true;
 	public static final boolean DEFENSER = false;
+	
+	/**
+	 * This field holds the value prepared for next round.  It determines who goes next.  
+	 *
+	 * @see	Battle#ATTACKER
+	 * @see	Battle#DEFENSER
+	 */
 	public boolean nextRound =  randomBoolean();   //randomly select the starter
-	public boolean randomBoolean()
+	
+	/**
+	 * Randomly select a boolean value.  The chance is 50:50.  
+	 *
+	 * @return	a random boolean
+	 */
+	public static boolean randomBoolean()
 	{
 		return new Random().nextInt(1) == 0;
 	}
 
 	private boolean winner = ATTACKER;
+	
+	/**
+	 * Fetch the winner of this battle.  The value would be valid only if Battle.end is called.  
+	 *
+	 * @see	Battle#ATTACKER
+	 * @see	Battle#DEFENSER
+	 * @return	the boolean repr. of the winner
+	 */
 	public boolean winner()
 	{
 		return winner;
@@ -30,19 +58,31 @@ public class Battle
 	public Player attacker;
 	public Player defenser;
 
+	/**
+	 * Constructs the Battle instance by 2 Players.  
+	 * @see	Player
+	 */
 	public Battle(Player attacker, Player defenser)
 	{
 		this.attacker = attacker;
 		this.defenser = defenser;
 	}
 
-
+	/**
+	 * The enum for the battle actions in the game.  
+	 */
 	public enum ACTION
 	{
 		ATTACK, RETREAT, PASS
 	}
 
-	public boolean init()
+	/**
+	 * Init. the Player's state(do not need to be explicitly called).  
+	 * <p> At the start of each battle all Pokemon start with 50 energy.  </p>
+	 *
+	 * @return	true if init. was successful.  
+	 */
+	private boolean init()
 	{
 		boolean result = true;
 
@@ -53,21 +93,41 @@ public class Battle
 		return result;
 	}
 
-	//ATTACK, NAME ABILITY
-	//RETREAT, NAME POKEMON
-	//PASS, RESERVED
-	//ATTACKER ALWAYS PERFORMS ACTIONS FIRST
+
+	/**
+	 * The enum for the results of nextRound.  
+	 *
+	 * <p> TRUE		there is a next round (the battle is not done yet)	</p>
+	 * <p> FALSE	one of the player's last Pokemon is dead, the battle is done  </p>
+	 * <p> PADEAD	the attacker's pokemon of THIS round is dead, the attacker has other ones.  </p>
+	 * <p> PBDEAD	the defenser's pokemon of THIS round is dead, the defenser has other ones.  </p>
+	 *
+	 * @see	Battle#nextRound
+	 */
 	public enum nextRoundr
 	{
 		TRUE, FALSE, PADEAD, PBDEAD, UNDETERMINED
 	}
-	//PADEAD=PBDEAD=TRUE!
 
+	/**
+	 * The function handles the logics of the battle-ing process.  
+	 * <p> It determines who's round it is, and performs the action specified by the ACTION.  </p>
+	 *
+	 * <p> ACTION.ATTACK, atkindx(attack) </p>
+	 * <p> ACTION.RETREAT, pokemon's indx </p>
+	 * <p> ACTION.PASS, reserved </p>
+	 *
+	 * <p> After each round each Pokemon recovers 10 energy, to a maximum of 50.  </p>
+	 * @return		nextRoundr
+	 * @see	Battle#nextRoundr
+	 */
 	public nextRoundr nextRound(ACTION action, String param)
 	{
 		if (!isInitialized) init();
 		if (isDone) return nextRoundr.FALSE;
-
+		
+		countActions++;	//2 actions make a round
+		
 		nextRoundr result;
 
 		Player playerA, playerB;
@@ -97,8 +157,11 @@ public class Battle
 		}
 
 		//end of round procedure
-		for (Pokemon i: attacker.pokemons) i.charge_energy(10);
-		for (Pokemon i: defenser.pokemons) i.charge_energy(10);
+		if (countActions%2 == 0)
+		{
+			for (Pokemon i: attacker.pokemons) i.charge_energy(10);
+			for (Pokemon i: defenser.pokemons) i.charge_energy(10);
+		}
 
 		//set flags, return result
 		boolean bothAlive = attacker.isAlive() && defenser.isAlive();
@@ -109,6 +172,9 @@ public class Battle
 		return result;
 	}
 
+	/**
+	 * Finish the battle, Perform post-battle actions.  
+	 */
 	private void end()
 	{
 		//determine winner
@@ -123,8 +189,5 @@ public class Battle
 			winner = DEFENSER;
 			for (Pokemon i: defenser.pokemons) if (i.isAlive()) i.charge_hp(20);
 		}
-
-
-
 	}
 }
