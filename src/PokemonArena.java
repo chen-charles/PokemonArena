@@ -402,7 +402,7 @@ class PickPokemonConsole extends Console
 				if (++j%4 == 0) System.out.println(i+". "+pokemons.get(i).name());
 				else
 				{
-					System.out.printf("%20s", i+". "+pokemons.get(i).name());   //80 columns
+					System.out.printf("%-20s", i+". "+pokemons.get(i).name());   //80 columns
 				}
 			}
 			if (j%4 != 0) System.out.println();
