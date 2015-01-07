@@ -153,6 +153,12 @@ public class PokemonArena
 			pokemons.remove(i);
 		}
 
+		//pick the first one to start
+		int[] pickstarter = {0};
+		System.out.println("Please Pick the First one to start! ");
+		pickpokemons(user.pokemons, pickstarter);
+		user.pokemons.add(0, user.pokemons.remove(pickstarter[0]));     //insert the poped one to the 1st place.
+
 		//enter battle
 		while (!pokemons.isEmpty())
 		{
@@ -339,7 +345,7 @@ public class PokemonArena
 		HashSet<Integer> set = new HashSet<Integer>();
 		Pokemon[] sel = new Pokemon[selections.length];
 		int t = 0;
-		System.out.println("Pick Your Pokemons!  Type in 'HELP' for more information.  ");
+		System.out.println("Pick Your Pokemon(s)!  Type in 'HELP' for more information.  ");
 
 		while (set.size() != selections.length)
 		{
