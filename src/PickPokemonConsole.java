@@ -9,7 +9,7 @@ import java.util.*;
  * @author  Charles-Jianye Chen
  * @see Console
  */
-class PickPokemonConsole extends Console
+public class PickPokemonConsole extends Console
 {
 	public ArrayList<Pokemon> pokemons = null;
 
