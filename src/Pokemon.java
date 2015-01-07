@@ -20,7 +20,7 @@ public class Pokemon
 
 	/**
 	 * Rename the Pokemon
-	 * @param name      the String repr. of the Pokemon's new name
+	 * @param name      the String repr of the Pokemon's new name
 	 */
 	public void rename(String name){this.name = name;}
 
@@ -69,7 +69,7 @@ public class Pokemon
 
 	/**
 	 * Fetch the Pokemon's type(this val is not changed through the Pokemon's lifetime)
-	 * The type of the Pokemon determines the type of damage it does, and thus affects weakness and resistance.
+	 * <p>The type of the Pokemon determines the type of damage it does, and thus affects weakness and resistance. </p>
 	 * @return  the type of the Pokemon.
 	 */
 	public TYPE type(){return this.type;}
@@ -78,7 +78,7 @@ public class Pokemon
 
 	/**
 	 * Fetch the Pokemon's resistance type.
-	 * If a Pokemon is hit by a Pokemon that he is resistant to, then the damage from that attack is cut in half.
+	 * <p>If a Pokemon is hit by a Pokemon that he is resistant to, then the damage from that attack is cut in half.</p>
 	 * @return  the resistance type of the Pokemon.
 	 */
 	public TYPE resistance(){return this.resistance;}
@@ -87,7 +87,7 @@ public class Pokemon
 
 	/**
 	 * Fetch the Pokemon's weakness type.
-	 * If a Pokemon is hit by a Pokemon that he is resistant to, then the damage from that attack is doubled.
+	 * <p>If a Pokemon is hit by a Pokemon that he is resistant to, then the damage from that attack is doubled. </p>
 	 * @return  the weakness type of the Pokemon.
 	 */
 	public TYPE weakness(){return this.weakness;}
@@ -117,9 +117,9 @@ public class Pokemon
 	}
 
 	/**
-	 * specialstates has a length of 2
-	 * specialstates[0] repr. the state of STUN
-	 * specialstates[1] repr. the state of DISABLE
+	 * <p>specialstates has a length of 2 </p>
+	 * <p>specialstates[0] repr the state of STUN </p>
+	 * <p>specialstates[1] repr the state of DISABLE </p>
 	 */
 	private boolean[] specialstates;
 
@@ -168,19 +168,23 @@ public class Pokemon
 	/**
 	 * There are 5 spcial attacks.  SPECIAL.NONE is being used for attacks with no SPECIAL states.
 	 *
-	 *
+	 * <p>
 	 * STUN: on top of normal damage there is a 50% change that the opponent will be stunned for one turn. If a Pokemon is stunned it my not attack or retreat.
-	 *
+	 * </p>
+	 * <p>
 	 * WILD CARD: The attack only has a 50% chance of success. If it does not succeed no damage is done.
-	 *
+	 * </p>
+	 * <p>
 	 * STORM: Base attack has a 50% chance of success, again no damage on a miss, but if it succeeds then the Pokemon
 	 * does a free wild storm attack (yes this can go on forever.)
-	 *
+	 * </p>
+	 * <p>
 	 * DISABLE: The target Pokemon becomes disabled, and its attacks will do 10 less damage for the rest of the battle
 	 *  (to a minimum of zero).  A Pokemon can only be disabled once.
-	 *
+	 * </p>
+	 * <p>
 	 * RECHARGE: Adds 20 energy to the attacking Pokemon.
-	 *
+	 * </p>
 	 */
 	public enum SPECIAL
 	{
@@ -188,8 +192,8 @@ public class Pokemon
 	}
 
 	/**
-	 * This class consists a toString() method for displaying the String repr. of the attack.
-	 * This class behaves like a struct consisting a name, a (energy) cost, a (hp) damage and a special state.
+	 * This class consists a toString() method for displaying the String repr of the attack.
+	 * <p>This class behaves like a struct consisting a name, a (energy) cost, a (hp) damage and a special state. </p>
 	 */
 	public static class AttackInfo
 	{
@@ -273,7 +277,7 @@ public class Pokemon
 
 	/**
 	 * Test if the specified attack(atkindx) is possible to use.
-	 * That is, if the current energy points is greater than the cost of the attack.
+	 * <p>That is, if the current energy points is greater than the cost of the attack. </p>
 	 * @param atkindx   the index of the attack in this#attacks()
 	 * @return  true if it is possible to use this attack.
 	 */
@@ -328,8 +332,8 @@ public class Pokemon
 	}
 
 	/**
-	 * Returns the String repr. of the Pokemon with AttackInfo(s) being attached.
-	 * @return  the String repr. of the Pokemon.
+	 * Returns the String repr of the Pokemon with AttackInfo(s) being attached.
+	 * @return  the String repr of the Pokemon.
 	 */
 	public String toString()
 	{
@@ -345,8 +349,8 @@ public class Pokemon
 	}
 
 	/**
-	 * Returns the String repr. of the Pokemon without AttackInfo(s).
-	 * @return  the String repr. of the Pokemon.
+	 * Returns the String repr of the Pokemon without AttackInfo(s).
+	 * @return  the String repr of the Pokemon.
 	 */
 	public String toStatusString()
 	{

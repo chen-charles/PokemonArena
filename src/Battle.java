@@ -21,6 +21,12 @@ public class Battle
 	 * @see	Battle#nextRound
 	 */
 	public static final boolean ATTACKER = true;
+
+	/**
+	 * If nextRound holds this value, the defenser(second param during construction) would go for the nextRound.
+	 *
+	 * @see	Battle#nextRound
+	 */
 	public static final boolean DEFENSER = false;
 	
 	/**
@@ -48,7 +54,7 @@ public class Battle
 	 *
 	 * @see	Battle#ATTACKER
 	 * @see	Battle#DEFENSER
-	 * @return	the boolean repr. of the winner
+	 * @return	the boolean repr of the winner
 	 */
 	public boolean winner()
 	{
@@ -59,8 +65,12 @@ public class Battle
 	public Player defenser;
 
 	/**
-	 * Constructs the Battle instance by 2 Players.  
+	 * Constructs the Battle instance by 2 Players.
+	 * @param attacker      the Player: ATTACKER.
+	 * @param defenser      the Player: DEFENSER
 	 * @see	Player
+	 * @see Battle#ATTACKER
+	 * @see Battle#DEFENSER
 	 */
 	public Battle(Player attacker, Player defenser)
 	{
@@ -118,8 +128,11 @@ public class Battle
 	 * <p> ACTION.PASS, reserved </p>
 	 *
 	 * <p> After each round each Pokemon recovers 10 energy, to a maximum of 50.  </p>
+	 *
+	 * @param action    indicates the actions is going to perform.
+	 * @param param     action-specific parameter.
 	 * @return		nextRoundr
-	 * @see	Battle#nextRoundr
+	 * @see	Battle.nextRoundr
 	 */
 	public nextRoundr nextRound(ACTION action, String param)
 	{

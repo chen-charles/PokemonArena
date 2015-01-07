@@ -1,16 +1,13 @@
-/*
-
-Console Internal Commands (CICs) are handled with the matching cmd name (not case sensitive)
-Overwrite the public methods of these cmd would change the behavior of CICs
-Simply adding an else-if clause will not solve the problem since CIC-handling starts from the base class
-
-OPTIONAL
-When a new CIC is defined, make sure all the CIC logic is located in a method with the name of the specific CIC
-
- */
-
 import java.util.*;
 
+/**
+ * Console.java
+ *
+ * This class emulates a console's behavior.
+ * @see ConsoleTest
+ *
+ * @author Charles-Jianye Chen
+ */
 public class Console
 {
     protected ArrayList<String> currentDirectory = new ArrayList<String>();
@@ -19,17 +16,30 @@ public class Console
     protected Scanner stdin = new Scanner(System.in);
     protected boolean isTerminated = false;
 
+    /**
+     * Constructs a console instance.
+     * @param dirSep    path seperator
+     */
     public Console(String dirSep)
     {
     	this.dirSep = dirSep;
     }
 
+    /**
+     * Constructs a console instance with dirSep="/"
+     */
     public Console()
     {
         this("/");
         makeDirectoryBuffer();
     }
 
+    /**
+     * This method joins the Strings in a given ArrayList, with the seperator.
+     * @param r     the ArrayList of String to be joined
+     * @param d     the seperator between each String
+     * @return      the String joined.
+     */
     public static String join(ArrayList<String> r, String d)
     {
         if (r.size() == 0) return "";
@@ -54,6 +64,13 @@ public class Console
         }
     }
 
+    /**
+     * This method emulates the behavior of "cd" command under win/xinx.  It does not check if "path" exists.
+     * @param param     the param passed by inputHandler(which is the user input excluding the first token).
+     * @return      CMD_SUCCESS
+     *
+     * @see Console#CMD_SUCCESS
+     */
     public int cd(String param)
     {
         if (param.isEmpty()) return 0;
@@ -131,12 +148,21 @@ public class Console
         Exception(EXCEPTION.Exception);
     }
 
+    /**
+     * Terminates the console.
+     * @param param     the exit status.
+     * @return      CMD_SUCCESS(0).
+     */
     public int exit(String param)   //is exiting?
     {
         exitStatus = param;
         return exit();
     }
 
+    /**
+     * Terminates the console.
+     * @return      CMD_SUCCESS(0).
+     */
     public int exit()
     {
         if (exitStatus == null) exitStatus = "";
@@ -144,13 +170,25 @@ public class Console
         return 0;
     }
 
-    private String exitStatus = null;
+    private String exitStatus = "";
+
+    /**
+     * Fetch the exit status String.
+     * @see Console#exit
+     * @return      the exit status
+     */
     public String getExitStatus()
     {
         return exitStatus;
     }
 
     private int lastResult = 0;
+
+    /**
+     * Fetch the last result of the command processed.
+     *
+     * @return      the result returned by the command.
+     */
     public int getLastResult()
     {
         return lastResult;
@@ -159,40 +197,25 @@ public class Console
     public static final int CMD_SUCCESS = 0;
     public static final int CMD_RETURN_VOID = -1;
     public static final int CMD_NOT_HANDLED = -2;
-    protected int inputHandler(String cmd, String param)
-    /*
-    This Method Should Be Overwritten.
-    This Method Should NOT Be Called Directly.  (Call inputHandler(String) instead)
 
-    return:
-        -1: handled cmd, cmd return type is VOID
-        -2: not handled cmd, could be handled in the overwritten methods
-        anythingelse: cmd-specific results
-    sample:
-    <CODE>
-        class ConsoleTest extends Console
-    {
-        protected int inputHandler(String cmd, String param)
-        {
-            int result = super.inputHandler(cmd, param);
-            if (result != CMD_NOT_HANDLED) return result;
-
-            result = CMD_RETURN_VOID;
-            if (cmd.equals("cd"))
-            {
-                result = cd(param);
-            } else if (cmd.equals("exit"))
-            {
-                exit(param);
-            } else
-            {
-                return CMD_NOT_HANDLED;  //not handled
-            }
-            return result;
-        }
-    }
-    </CODE>
+    /**
+     * This method distributes the command by input.
+     * <p>This Method Should Be Overwritten. </p>
+     * <p>This Method Should NOT Be Called Directly.  (Call inputHandler(String) instead)</p>
+     * @param cmd       the first token of the user input
+     * @param param     the rest of the user input
+     * @return      the result of handling this command
+     *
+     * <p>return values:
+     *      CMD_SUCCESS(0): handled cmd, successfully.
+     *      CMD_RETURN_VOID(-1): handled cmd, cmd return type is VOID.
+     *      CMD_NOT_HANDLED(-2): not handled cmd, could be handled in the overwritten methods.
+     *      anythingelse: cmd-specific results.
+     * </p>
+     *
+     * @see ConsoleTest#inputHandler
      */
+    protected int inputHandler(String cmd, String param)
     {
         return CMD_NOT_HANDLED;
     }
@@ -203,6 +226,11 @@ public class Console
         return true;
     }
 
+    /**
+     * This method handles the user input, parses it, then distributes it.
+     * @param userInput     the line of user's input
+     * @return      true.
+     */
     public boolean inputHandler(String userInput)
     {
         String[] arr = parseInput(userInput);
@@ -224,6 +252,12 @@ public class Console
         while (cl.next());
     }
 
+    /**
+     * Instead of letting main() to do all the rough work, calling to this method will handle the console behaviour automatically.
+     * <p>while (console.next()); </p>
+     * @return      true if the console is not yet terminated.
+     * @see Console#main
+     */
     public boolean next()
     {
         if (!isTerminated)
@@ -236,6 +270,11 @@ public class Console
     }
 }
 
+/**
+ * The sample class which demonstrates how the Console is used.
+ *
+ * @see Console
+ */
 class ConsoleTest extends Console
 {
     protected int inputHandler(String cmd, String param)

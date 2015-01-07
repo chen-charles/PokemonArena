@@ -1,21 +1,25 @@
-/*
-PokemonArena.java
-Charles-Jianye Chen
-
-ICS4U project: PokemonArena
-design a pokemon game with only battle-ing stuff
-
- */
-
 import java.io.*;
 import java.util.*;
 
+/**
+ * PokemonArena.java
+ *
+ * The PokemonArena Game.  ICS4U.
+ * A pokemon game with only battle-ing stuff.
+ *
+ * @see PickPokemonConsole
+ * @author  Charles-Jianye Chen
+ */
 public class PokemonArena
 {
 	public static Hashtable<String, Pokemon.TYPE> pkmonTypeMap = new Hashtable<String, Pokemon.TYPE>();
 	public static Hashtable<String, Pokemon.SPECIAL> pkmonSpecialMap = new Hashtable<String, Pokemon.SPECIAL>();
 	public static String abspath = PokemonArena.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
+	/**
+	 * Init. the static fields of PokemonArena.
+	 *
+	 */
 	public static void init()
 	{
 		abspath = abspath.replaceAll("%20", " ");
@@ -37,6 +41,12 @@ public class PokemonArena
 		pkmonTypeMap.put("leaf", Pokemon.TYPE.LEAF);
 	}
 
+	/**
+	 * Parses String repr of a Pokemon instance into a Pokemon instance.
+	 * @param raw       String repr. of Pokemon.
+	 * @return      the newly generated Pokemon.
+	 * @see PokemonArena#loadPokemons
+	 */
 	public static Pokemon parseRaw(String raw) //parse the RAW data, then call the constructor
 	{
 		String[] data = raw.split(",");
@@ -58,6 +68,20 @@ public class PokemonArena
 				pkmonTypeMap.get(data[4]), attacks);
 	}
 
+	/**
+	 * Load String repr of Pokemon instances from a file.
+	 *
+	 * <p>File Format: </p>
+	 *
+	 * <p>Line 1: num of entries</p>
+	 * <p>The following lines:
+	 * name, hp, type, resistance, weakness, numattacks, numattacks*[attackname, energycost, damage, special]
+	 * </p>
+	 *
+	 * @param fname     the file's name which contains the String repr. of Pokemon instances.
+	 * @return      an array of the Pokemon instances generated from the file.
+	 * @throws IOException  if the it occurs while opening the file.
+	 */
 	public static Pokemon[] loadPokemons(String fname) throws IOException
 	{
 		Scanner infile;
@@ -79,6 +103,12 @@ public class PokemonArena
 		return pokemons;
 	}
 
+	/**
+	 * Convert an object array into an ArrayList of the instances.
+	 * @param objectArray   the array which is going to be transformed.
+	 * @param <T>           type of the object array.
+	 * @return      the ArrayList of the instances in the array.
+	 */
 	public static <T> ArrayList<T> toArrayList(T[] objectArray)
 	{
 		ArrayList<T> arr = new ArrayList<T>();
@@ -227,6 +257,11 @@ public class PokemonArena
 
 	}
 
+	/**
+	 * Calls pickpokemons(ArrayList, int[]) to fetch the Pokemon indx of the selection.
+	 * @param player        the Player object which contains the pokemons to be selected.
+	 * @return      the String repr. of an indx.
+	 */
 	public static String nextpokemon(Player player) //this method ensures the selection is being done(see pickpokemons)
 	{
 		int[] sel = {0};
@@ -234,6 +269,11 @@ public class PokemonArena
 		return "" + sel[0];
 	}
 
+	/**
+	 * Asks the user to select their next action.
+	 * @param player        the Player who needs the next action.
+	 * @return      the String repr of the next action: Battle.ACTION, param
+	 */
 	public static String nextaction(Player player)
 	{
 		while (true)
@@ -287,8 +327,14 @@ public class PokemonArena
 
 	}
 
+	/**
+	 * This method creates a console and asks user to input a total amount of (selection.length) non-rep pokemons.
+	 * <p>This method does not allow "retn" to happen.  </p>
+	 * @param pokemons      the arraylist containing pokemons to select.
+	 * @param selections    the array for storing (returning) indx (length must be specified).
+	 * @see PickPokemonConsole
+	 */
 	public static void pickpokemons(ArrayList<Pokemon> pokemons, int[] selections)
-	//***this method does not allow "retn" to happen
 	{
 		HashSet<Integer> set = new HashSet<Integer>();
 		Pokemon[] sel = new Pokemon[selections.length];
@@ -330,6 +376,16 @@ public class PokemonArena
 		}
 	}
 
+	/**
+	 * This method creates a console and asks user to input one pokemon selection.
+	 * <p>This method does allow "retn" to happen.  </p>
+	 * @param pokemons      the arraylist containing pokemons to select.
+	 *
+	 * @see PickPokemonConsole
+	 * @throws Exception    if a "retn" is received from the console.
+	 *
+	 * @return      the indx of the selection.
+	 */
 	public static int pickpokemons(ArrayList<Pokemon> pokemons) throws Exception
 	//Unless the action is successfully done, an Exception will occur
 	//***RETN is not acceptable in this method
@@ -340,133 +396,6 @@ public class PokemonArena
 		if (console.getExitStatus() == null || !console.getExitStatus().equals(""))
 			throw new Exception(console.getExitStatus());   //invalid exit status, SHOULD BE CAUGHT
 		return console.getLastResult();
-	}
-}
-
-
-class PickPokemonConsole extends Console
-{
-	public ArrayList<Pokemon> pokemons = null;
-	public void setPokemons(ArrayList<Pokemon> pokemons)
-	{
-		this.pokemons = pokemons;
-	}
-
-	protected int inputHandler(String cmd, String param)
-	{
-		int result = super.inputHandler(cmd, param);
-		if (result != CMD_NOT_HANDLED) return result;
-
-		result = CMD_RETURN_VOID;
-		if (cmd.equals("help"))
-		{
-			result = help(param);
-		} else if (cmd.equals("info"))
-		{
-			result = info(param);
-		} else if (cmd.equals("list"))
-		{
-			result = list(param);
-		} else if (cmd.equals("pick"))
-		{
-			result = pick(param);
-		} else if (cmd.equals("retn"))
-		{
-			result = exit(cmd);
-		} else
-		{
-			Exception(EXCEPTION.InvalidCommandException);
-			return CMD_NOT_HANDLED;  //not handled
-		}
-		return result;
-	}
-
-	public static int help(String param)
-	{
-		System.out.println("The Following Commands are Available in this Console: ");
-		System.out.println("HELP\t\tshow available commands");
-		System.out.println("INFO\t\tID/name show information about a specified pokemon");
-		System.out.println("LIST\t\tshow a list of available pokemons");
-		System.out.println("PICK\t\tID/name pick a specified pokemon");
-		System.out.println("RETN\t\tcancel the operation is possible");
-		return CMD_RETURN_VOID;
-	}
-
-	public int list(String param)
-	{
-		try
-		{
-			int j=0;
-			for (int i=0; i<pokemons.size(); i++)
-			{
-				if (++j%4 == 0) System.out.println(i+". "+pokemons.get(i).name());
-				else
-				{
-					System.out.printf("%-20s", i+". "+pokemons.get(i).name());   //80 columns
-				}
-			}
-			if (j%4 != 0) System.out.println();
-		}
-		catch (NullPointerException err)
-		{
-			Exception(EXCEPTION.Exception, "ArrayList<Pokemon> is not initialized");
-		}
-		return CMD_SUCCESS;
-	}
-
-	public int pick(String param)
-	{
-		Integer t = null;
-		try
-		{
-			this.pokemons.get(Integer.parseInt(param));
-			t = Integer.parseInt(param);
-		}
-		catch (NullPointerException err)
-		{
-			Exception(EXCEPTION.Exception, "ArrayList<Pokemon> is not initialized");
-		}
-		catch (Exception err)
-		{
-			for(int i=0; i<pokemons.size(); i++)
-			{
-				if (pokemons.get(i).name().equals(param))
-				{
-					t = i;
-					break;
-				}
-			}
-		}
-		if (t == null) Exception(EXCEPTION.Exception, "Not Present");
-		else exit();
-		return t == null ? CMD_RETURN_VOID : t;
-	}
-
-	public int info(String param)
-	{
-		Pokemon t = null;
-		try
-		{
-			t = this.pokemons.get(Integer.parseInt(param));
-		}
-		catch (NullPointerException err)
-		{
-			Exception(EXCEPTION.Exception, "ArrayList<Pokemon> is not initialized");
-		}
-		catch (Exception err)
-		{
-			for(Pokemon i: this.pokemons)
-			{
-				if (i.name().equals(param))
-				{
-					t = i;
-					break;
-				}
-			}
-		}
-		if (t == null) Exception(EXCEPTION.Exception, "Not Present");
-		else System.out.println(t.toString());
-		return CMD_SUCCESS;
 	}
 }
 

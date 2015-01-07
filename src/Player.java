@@ -22,8 +22,8 @@ public class Player
 
     /**
      * The public ArrayList of the pokemons the player has.
-     * The contents of this field should not be changed.
-     * It is there only for the purpose of being used as READ-ONLY.
+     * <p>The contents of this field should not be changed. </p>
+     * <p>It is there only for the purpose of being used as READ-ONLY. </p>
      *
      * Since it will be referenced very oftenly, making a getter and then create a copy of this arraylist costs too much.
      */
@@ -54,8 +54,8 @@ public class Player
 
     /**
      * Removes the current Pokemon from the Player's Pokemon list.
-     * Note, the currentPokemon indx will be set to invalid.
-     * A call to setCurrentPokemon must be issued before any sensitive operations.
+     * <p>Note, the currentPokemon indx will be set to invalid. </p>
+     * <p>A call to setCurrentPokemon must be issued before any sensitive operations. </p>
      */
     public void remove()
     {
@@ -77,7 +77,7 @@ public class Player
 
     /**
      * Sets the current Pokemon by its name.
-     * If multiple pokemons with same names are present, the first one (lower index) would be selected.
+     * <p>If multiple pokemons with same names are present, the first one (lower index) would be selected.  </p>
      * @param name      the name of the Pokemon
      */
     public void setCurrentPokemon(String name)
@@ -103,7 +103,7 @@ public class Player
 
     /**
      * Checks if the Player is still considered "alive"
-     * That is, at least one Pokemon belongs to the Player is alive.
+     * <p>That is, at least one Pokemon belongs to the Player is alive. </p>
      * @return  true if the Player is still considered "alive".
      */
     public boolean isAlive()
